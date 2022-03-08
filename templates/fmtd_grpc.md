@@ -1,22 +1,15 @@
-# LND gRPC API Reference
+# FMT gRPC API Reference
 
-Welcome to the gRPC API reference documentation for LND, the Lightning Network
-Daemon.
+Welcome to the gRPC API reference documentation for FMT, the Facility Management Tool.
 
-This site features the API documentation for lncli (CLI), [Python](https:///dev.lightning.community/guides/python-grpc/),
-and [JavaScript](https://dev.lightning.community/guides/javascript-grpc/) in
-order to communicate with a local `lnd` instance through gRPC. It is intended
-for those who already understand how to work with LND. If this is your first
-time or you need a refresher, you may consider perusing our LND developer site
-featuring a tutorial, resources and guides at [dev.lightning.community](https://dev.lightning.community).
+This site features the API documentation for fmtcli (CLI), Python,
+and Javascript in order to communicate with a `fmtd` instance through gRPC.
 
-The examples to the right assume that the there is a local `lnd` instance
-running and listening for gRPC connections on port {{ grpcport }}. `LND_DIR` will be used
-as a placeholder to denote the base directory of the `lnd` instance. By default,
-this is `~/.lnd` on Linux and `~/Library/Application Support/Lnd` on macOS.
+The examples to the right assume that the there is a remote `fmtd` instance
+running and listening for gRPC connections on port {{ grpcport }}.
 
 At the time of writing this documentation, two things are needed in order to
-make a gRPC request to an `lnd` instance: a TLS/SSL connection and a macaroon
+make a gRPC request to an `fmtd` instance: a TLS/SSL connection and a macaroon
 used for RPC authentication. The examples to the right will show how these can
 be used in order to make a successful, secure, and authenticated gRPC request.
 
@@ -28,10 +21,10 @@ can be found here:
 
 
 This is the reference for the **gRPC API**. Alternatively, there is also a [REST
-API which is documented here](#lnd-rest-api-reference).
+API which is documented here](#fmt-rest-api-reference).
 
 <small>This documentation was
-[generated automatically](https://github.com/lightninglabs/lightning-api) against commit
+[generated automatically](https://github.com/SSSOC-CAN/fmt-api) against commit
 [`{{ commit }}`]({{ repoUrl }}/tree/{{ commit }}).</small>
 
 ## Experimental services
@@ -62,8 +55,8 @@ compile-time flag to be active (they are active in the official release binaries
 {{ method.description }}
 
 {% include 'grpc/shell.md' %}
-{% include 'grpc/lnd_python.md' %}
-{% include 'grpc/lnd_javascript.md' %}
+{% include 'grpc/fmtd_python.md' %}
+{% include 'grpc/fmtd_javascript.md' %}
 
 {% include 'grpc/request.md' %}
 {% include 'grpc/response.md' %}
