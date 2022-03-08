@@ -1,11 +1,11 @@
-# Lightning Network Daemon API Documentation Site
-API Documentation for the Lightning Network Daemon, powered by
+# Facility Management Tool API Documentation Site
+API Documentation for the FMT, powered by
 [Slate](https://github.com/lord/slate)
 
 ## Overview
 
 This repository contains functionality for programmatically pulling API
-information from `lncli -h` and `rpc.proto` on the lnd Github, using a Python
+information from `fmtcli -h` and `*.proto` on the fmtd Github, using a Python
 script and Jinja2 template to output Slate markdown, which itself generates the
 fully rendered static site. 
 
