@@ -2,6 +2,7 @@ FROM golang:1.17-buster
 
 # Install all required packages. We need Ruby >= 2.3.1 and Python >= 2.7.0.
 RUN apt-get -y update \
+  && apt-get -y upgrade \
   && apt-get -y install \
     ruby-full \
     zlib1g-dev \
@@ -27,18 +28,11 @@ COPY install_proto.sh /tmp/work/
 RUN /tmp/work/install_proto.sh
 
 # Compile both projects to have most dependencies and build steps cached.
-RUN git clone https://github.com/lightningnetwork/lnd /tmp/lnd \
-  && cd /tmp/lnd \
-  && make \
-  && git clone https://github.com/lightninglabs/loop /tmp/loop \
-  && cd /tmp/loop \
-  && make \
-  && git clone https://github.com/lightninglabs/faraday /tmp/faraday \
-  && cd /tmp/faraday \
-  && make \
-  && git clone https://github.com/lightninglabs/pool /tmp/pool \
-  && cd /tmp/pool \
-  && make
+RUN git clone https://SSSOCPaulCote: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@github.com/SSSOC-CAN/fmtd /tmp/fmtd \
+  && cd /tmp/fmtd \
+  && export GOARCH="386" \
+  && export GOOS="windows" \
+  && make install
 
 # Copy the rest of the files last so changes won't trigger a full rebuild of the image.
 COPY . /tmp/work

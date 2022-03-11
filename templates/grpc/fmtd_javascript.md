@@ -9,20 +9,20 @@ const loaderOptions = {
   defaults: true,
   oneofs: true
 };
-{% if method.fileName == 'lightning.proto' %}const packageDefinition = protoLoader.loadSync('{{ method.fileName }}', loaderOptions);{% endif %}{% if method.fileName != 'lightning.proto' %}const packageDefinition = protoLoader.loadSync(['lightning.proto', '{{ method.fileName }}'], loaderOptions);{% endif %}
+{% if method.fileName == 'fmt.proto' %}const packageDefinition = protoLoader.loadSync('{{ method.fileName }}', loaderOptions);{% endif %}{% if method.fileName != 'fmt.proto' %}const packageDefinition = protoLoader.loadSync(['fmt.proto', '{{ method.fileName }}'], loaderOptions);{% endif %}
 const {{ method.packageName }} = grpc.loadPackageDefinition(packageDefinition).{{ method.packageName }};
-const macaroon = fs.readFileSync("LND_DIR/data/chain/bitcoin/simnet/admin.macaroon").toString('hex');
+const macaroon = fs.readFileSync("/path/to/admin.macaroon").toString('hex');
 process.env.GRPC_SSL_CIPHER_SUITES = 'HIGH+ECDSA';
-const lndCert = fs.readFileSync('LND_DIR/tls.cert');
-const sslCreds = grpc.credentials.createSsl(lndCert);{% if method.service == 'WalletUnlocker' %}
-const {{ method.serviceJS }} = new {{ method.packageName }}.{{ method.service }}('localhost:{{ grpcport }}', sslCreds);{% else %}
+const lndCert = fs.readFileSync('/path/to/tls.cert');
+const sslCreds = grpc.credentials.createSsl(lndCert);{% if method.service == 'Unlocker' %}
+const {{ method.serviceJS }} = new {{ method.packageName }}.{{ method.service }}('{{ sssocip }}:{{ grpcport }}', sslCreds);{% else %}
 const macaroonCreds = grpc.credentials.createFromMetadataGenerator(function(args, callback) {
   let metadata = new grpc.Metadata();
   metadata.add('macaroon', macaroon);
   callback(null, metadata);
 });
 let creds = grpc.credentials.combineChannelCredentials(sslCreds, macaroonCreds);
-let {{ method.serviceJS }} = new {{ method.packageName }}.{{ method.service }}('localhost:{{ grpcport }}', creds);{% endif %}
+let {{ method.serviceJS }} = new {{ method.packageName }}.{{ method.service }}('{{ sssocip }}:{{ grpcport }}', creds);{% endif %}
 let request = {% if method.requestMessage.params|length == 0 %}{};{% else %}{ {% for param in method.requestMessage.params %}
   {{ param.name }}: <{{ param.type }}>, {% endfor %}
 };{% endif %} {% if not method.streamingRequest and not method.streamingResponse %}

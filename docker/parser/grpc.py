@@ -185,7 +185,7 @@ def parse_methods(services, messages, fileName, command):
 
 def parse_command_help(command, subcommand):
     """
-    Parses the help output from an gRPC method's corresponding lncli command.
+    Parses the help output from an gRPC method's corresponding fmtcli command.
     """
 
     commandParts = subcommand.split(' ')

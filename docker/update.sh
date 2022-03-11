@@ -18,7 +18,13 @@ function compile() {
   git pull
   git checkout $CHECKOUT_COMMIT
   COMMIT=$(git rev-parse HEAD)
+  eval $GOOS_CMD
+  eval $GOARCH_CMD
+  eval $GOPATH_CMD
   eval $INSTALL_CMD
+  # eval $MV_EXE_CMD
+  # which fmtd
+  # which fmtcli
   popd
 
   # Copy over all proto and json files from the checked out lnd source directory.
@@ -33,21 +39,15 @@ function compile() {
 
   # Render the new docs.
   cp templates/${COMPONENT}_header.md $APPEND_TO_FILE
-  export EXPERIMENTAL_PACKAGES PROTO_DIR PROTO_SRC_DIR WS_ENABLED COMMIT REPO_URL COMMAND COMPONENT APPEND_TO_FILE GRPC_PORT REST_PORT EXCLUDE_SERVICES
+  export PROTO_DIR PROTO_SRC_DIR WS_ENABLED COMMIT REPO_URL COMMAND COMPONENT APPEND_TO_FILE GRPC_PORT REST_PORT EXCLUDE_SERVICES
   ./render.py
   cat templates/${COMPONENT}_footer.md >> $APPEND_TO_FILE
 }
 
 # Generic options.
 WS_ENABLED="${WS_ENABLED:-true}"
-LND_FORK="${LND_FORK:-lightningnetwork}"
-LND_COMMIT="${LND_COMMIT:-master}"
-LOOP_FORK="${LOOP_FORK:-lightninglabs}"
-LOOP_COMMIT="${LOOP_COMMIT:-master}"
-FARADAY_FORK="${FARADAY_FORK:-lightninglabs}"
-FARADAY_COMMIT="${FARADAY_COMMIT:-master}"
-POOL_FORK="${POOL_FORK:-lightninglabs}"
-POOL_COMMIT="${POOL_COMMIT:-master}"
+FMTD_FORK="${FMTD_FORK:-SSSOC-CAN}"
+FMTD_COMMIT="${FMTD_COMMIT:-main}"
 PROTO_ROOT_DIR="build/protos"
 
 # Remove previously generated templates.
@@ -55,66 +55,20 @@ rm -rf $PROTO_ROOT_DIR
 rm -rf source/*.html.md
 
 ########################
-## Compile docs for lnd
+## Compile docs for fmtd
 ########################
-REPO_URL="https://github.com/${LND_FORK}/lnd"
-CHECKOUT_COMMIT=$LND_COMMIT
-COMPONENT=lnd
-COMMAND=lncli
-PROTO_SRC_DIR=lnrpc
+REPO_URL="https://github.com/${FMTD_FORK}/fmtd"
+CHECKOUT_COMMIT=$FMTD_COMMIT
+COMPONENT=fmtd
+COMMAND=fmtcli
+PROTO_SRC_DIR=fmtrpc
 EXCLUDE_PROTOS="none"
-EXPERIMENTAL_PACKAGES="signrpc walletrpc chainrpc invoicesrpc watchtowerrpc"
-INSTALL_CMD="make clean && make install tags=\"$EXPERIMENTAL_PACKAGES\""
-APPEND_TO_FILE=source/lnd.html.md
-GRPC_PORT=10009
+GOOS_CMD="export GOOS=\"windows\""
+GOARCH_CMD="export GOARCH=\"386\""
+GOPATH_CMD="export GOPATH=~/go && export PATH=${PATH}:${GOPATH}/bin"
+MV_EXE_CMD="cp /usr/local/go/bin/windows_386/fmtd.exe ~/go/bin && cp /usr/local/go/bin/windows_386/fmtcli.exe ~/go/bin"
+INSTALL_CMD="make install"
+APPEND_TO_FILE=source/fmtd.html.md
+GRPC_PORT=3567
 REST_PORT=8080
-compile
-
-########################
-## Compile docs for loop
-########################
-REPO_URL="https://github.com/${LOOP_FORK}/loop"
-CHECKOUT_COMMIT=$LOOP_COMMIT
-COMPONENT=loop
-COMMAND=loop
-PROTO_SRC_DIR=""
-EXCLUDE_PROTOS="server.proto -not -name common.proto"
-EXPERIMENTAL_PACKAGES=""
-INSTALL_CMD="make install"
-APPEND_TO_FILE=source/loop.html.md
-GRPC_PORT=11010
-REST_PORT=8081
-compile
-
-########################
-## Compile docs for faraday
-########################
-REPO_URL="https://github.com/${FARADAY_FORK}/faraday"
-CHECKOUT_COMMIT=$FARADAY_COMMIT
-COMPONENT=faraday
-COMMAND=frcli
-PROTO_SRC_DIR=frdrpc
-EXCLUDE_PROTOS="none"
-EXPERIMENTAL_PACKAGES=""
-INSTALL_CMD="make install"
-APPEND_TO_FILE=source/faraday.html.md
-GRPC_PORT=8465
-REST_PORT=8082
-compile
-
-########################
-## Compile docs for pool
-########################
-REPO_URL="https://github.com/${POOL_FORK}/pool"
-CHECKOUT_COMMIT=$POOL_COMMIT
-COMPONENT=pool
-COMMAND=pool
-PROTO_SRC_DIR=""
-EXCLUDE_PROTOS="none"
-EXCLUDE_SERVICES="ChannelAuctioneer"
-EXPERIMENTAL_PACKAGES=""
-INSTALL_CMD="make install"
-APPEND_TO_FILE=source/pool.html.md
-GRPC_PORT=12010
-REST_PORT=8281
 compile

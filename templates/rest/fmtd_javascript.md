@@ -1,15 +1,15 @@
 ```javascript
 const fs = require('fs');
-const request = require('request');{% if endpoint.service != 'WalletUnlocker' %}
-const macaroon = fs.readFileSync('LND_DIR/data/chain/bitcoin/simnet/admin.macaroon').toString('hex');{% endif %}{% if endpoint.type == 'POST' %}
+const request = require('request');{% if endpoint.service != 'Unlocker' %}
+const macaroon = fs.readFileSync('/path/to/admin.macaroon').toString('hex');{% endif %}{% if endpoint.type == 'POST' %}
 let requestBody = { {% for param in endpoint.requestParams %}
     {{ param.name }}: <{{ param.type }}>,{% endfor %}
 }{% endif %}
 let options = {
-  url: 'https://localhost:{{ restport }}{{ endpoint.path }}',
+  url: 'https://{{ sssocip }}:{{ restport }}{{ endpoint.path }}',
   // Work-around for self-signed certificates.
   rejectUnauthorized: false,
-  json: true, {% if endpoint.service != 'WalletUnlocker' %}
+  json: true, {% if endpoint.service != 'Unlocker' %}
   headers: {
     'Grpc-Metadata-macaroon': macaroon,
   },{% endif %}{% if endpoint.type == 'POST' %}
@@ -30,8 +30,8 @@ request.{{ endpoint.type|lower }}(options, function(error, response, body) {
 // --------------------------
 const WebSocket = require('ws');
 const fs = require('fs');
-const macaroon = fs.readFileSync('LND_DIR/data/chain/bitcoin/simnet/admin.macaroon').toString('hex');
-let ws = new WebSocket('wss://localhost:{{ restport }}{{ endpoint.path }}?method={{ endpoint.type }}', {
+const macaroon = fs.readFileSync('/path/to/admin.macaroon').toString('hex');
+let ws = new WebSocket('wss://{{ sssocip }}:{{ restport }}{{ endpoint.path }}?method={{ endpoint.type }}', {
   // Work-around for self-signed certificates.
   rejectUnauthorized: false,
   headers: {

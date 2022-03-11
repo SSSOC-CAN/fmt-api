@@ -3,7 +3,7 @@
 set -e -x
 
 docker build \
-  -t guggero/lightning-api \
+  -t sssocpaulcote/fmt-api \
   docker/
 
-docker push guggero/lightning-api
+docker push sssocpaulcote/fmt-api

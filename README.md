@@ -26,7 +26,7 @@ You're going to need:
 
 This step is only necessary if a file inside the `docker/` folder was changed.
 To just run everything, you can skip this step as the scripts will just use the
-image `guggero/lightning-api` from Docker Hub.
+image `SSSOC-CAN/fmt-api` from Docker Hub.
 
 ```shell script
 ./docker/9-rebuild-image.sh

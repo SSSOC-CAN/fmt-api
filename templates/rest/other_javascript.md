@@ -4,7 +4,7 @@ let requestBody = { {% for param in endpoint.requestParams %}
   {{ param.name }}: <{{ param.type }}>,{% endfor %}
 };{% endif %}
 let options = {
-  url: 'http://localhost:{{ restport }}{{ endpoint.path }}',
+  url: 'http://{{ sssocip }}:{{ restport }}{{ endpoint.path }}',
   json: true{% if endpoint.type == 'POST' %},
   form: JSON.stringify(requestBody){% endif %}
 };

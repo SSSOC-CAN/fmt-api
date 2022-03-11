@@ -9,7 +9,6 @@ import os
 import subprocess
 
 PROTO_DIR = os.environ.get('PROTO_DIR')
-EXPERIMENTAL_PACKAGES = os.environ.get('EXPERIMENTAL_PACKAGES')
 REPO_URL = os.environ.get('REPO_URL')
 COMMIT = os.environ.get('COMMIT')
 COMMAND = os.getenv('COMMAND')
@@ -19,6 +18,7 @@ PROTO_SRC_DIR = os.environ.get('PROTO_SRC_DIR')
 APPEND_TO_FILE = os.environ.get('APPEND_TO_FILE')
 GRPC_PORT = os.environ.get('GRPC_PORT')
 REST_PORT = os.environ.get('REST_PORT')
+SSSOC_IP = "live.sssoc.ca"
 EXCLUDE_SERVICES = os.environ.get('EXCLUDE_SERVICES')
 
 def render_grpc():
@@ -49,12 +49,6 @@ def render_grpc():
             grpc_package_files[pkg] = []
 
         grpc_package_files[pkg].append(file['name'])
-        if pkg in EXPERIMENTAL_PACKAGES:
-            experimental.append({
-              'package': pkg,
-              'file': file['name'],
-              'service': file['services'][0]['name']
-            })
 
     for file in grpc_json_files:
         grpc_messages.update(grpc.parse_messages(PROTO_DIR, file['messages'], file['name'], grpc_package_files))
@@ -73,7 +67,7 @@ def render_grpc():
     # Parse the command help for each method.
     for _, service in grpc_services.items():
         for method in service['methods']:
-            # Make calls to lncli -h and populate the method with that information.
+            # Make calls to fmtcli -h and populate the method with that information.
             subcommand = method.get('subcommand')
             if subcommand:
                 method['commandInfo'] = grpc.parse_command_help(COMMAND, subcommand)
@@ -114,7 +108,8 @@ def render_grpc():
         component=COMPONENT,
         rpcdir=PROTO_SRC_DIR,
         grpcport=GRPC_PORT,
-        restport=REST_PORT)
+        restport=REST_PORT,
+        sssocip=SSSOC_IP)
 
     # Write the file to the source directory.
     with open(APPEND_TO_FILE, 'a+') as f:
@@ -164,7 +159,8 @@ def render_rest():
         component=COMPONENT,
         rpcdir=PROTO_SRC_DIR,
         grpcport=GRPC_PORT,
-        restport=REST_PORT)
+        restport=REST_PORT,
+        sssocip=SSSOC_IP)
 
     with open(APPEND_TO_FILE, 'a+') as f:
         f.write(docs)

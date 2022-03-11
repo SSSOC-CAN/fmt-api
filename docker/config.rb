@@ -55,7 +55,7 @@ end
 set :port, 4567
 
 set :build_dir, "build/all"
-set :index_file, "lnd.html"
+set :index_file, "fmtd.html"
 
 helpers do
   require './lib/toc_data.rb'

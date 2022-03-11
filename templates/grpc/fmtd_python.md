@@ -2,12 +2,12 @@
 >>> import codecs, grpc, os
 >>> # Generate the following 2 modules by compiling the {{ rpcdir }}/{{ method.fileName }} with the grpcio-tools.
 >>> # See https://github.com/lightningnetwork/lnd/blob/master/docs/grpc/python.md for instructions.
->>> import {{ method.stubFileName }}_pb2 as {{ method.packageName }}, {{ method.stubFileName }}_pb2_grpc as {{ method.stubFileName }}stub{% if method.service != 'WalletUnlocker' %}
->>> macaroon = codecs.encode(open('LND_DIR/data/chain/bitcoin/simnet/admin.macaroon', 'rb').read(), 'hex'){% endif %}
+>>> import {{ method.stubFileName }}_pb2 as {{ method.packageName }}, {{ method.stubFileName }}_pb2_grpc as {{ method.stubFileName }}stub{% if method.service != 'Unlocker' %}
+>>> macaroon = codecs.encode(open('/path/to/admin.macaroon', 'rb').read(), 'hex'){% endif %}
 >>> os.environ['GRPC_SSL_CIPHER_SUITES'] = 'HIGH+ECDSA'
->>> cert = open('LND_DIR/tls.cert', 'rb').read()
+>>> cert = open('/path/to/tls.cert', 'rb').read()
 >>> ssl_creds = grpc.ssl_channel_credentials(cert)
->>> channel = grpc.secure_channel('localhost:{{ grpcport }}', ssl_creds)
+>>> channel = grpc.secure_channel('{{ sssocip }}:{{ grpcport }}', ssl_creds)
 >>> stub = {{ method.stubFileName }}stub.{{ method.service }}Stub(channel){% if method.streamingRequest %}
 {% include 'python/streaming_request.html' %}{% else %}
 {% include 'python/simple_request.html' %}{% endif %}{% if method.streamingResponse %}
