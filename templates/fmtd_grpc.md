@@ -8,15 +8,15 @@ and Javascript in order to communicate with a `fmtd` instance through gRPC.
 The examples to the right assume that the there is a remote `fmtd` instance
 running and listening for gRPC connections on port {{ grpcport }}.
 
-At the time of writing this documentation, two things are needed in order to
-make a gRPC request to an `fmtd` instance: a TLS/SSL connection and a macaroon
-used for RPC authentication. The examples to the right will show how these can
-be used in order to make a successful, secure, and authenticated gRPC request.
+Two things are needed in order to make a gRPC request to an `fmtd` instance: 
+a TLS/SSL connection and a macaroon used for RPC authentication. The examples 
+to the right will show how these can be used in order to make a successful, 
+secure, and authenticated gRPC request.
 
 The original `*.proto` files from which the gRPC documentation was generated
 can be found here:
 
-{% for file in files %}- [`{{ file }}`]({{ docsRepoUrl }}/blob/{{ commit }}/protos/{{file}})
+{% for file in files %}- [`{{ file }}`]({{ docsRepoUrl }}/blob/{{ docsCommit }}/protos/{{file}})
 {% endfor %}
 
 

@@ -8,15 +8,15 @@ barebones examples using `curl`, for HTTP requests.
 The examples to the right assume that the there is a remote `fmtd` instance
 running and listening for REST connections on port {{ restport }}.
 
-At the time of writing this documentation, two things are needed in order to
-make an HTTP request to an `fmtd` instance: a TLS/SSL connection and a macaroon
-used for RPC authentication. The examples to the right will show how these can
-be used in order to make a successful, secure, and authenticated HTTP request.
+Two things are needed in order to make a gRPC request to an `fmtd` instance: 
+a TLS/SSL connection and a macaroon used for RPC authentication. The examples 
+to the right will show how these can be used in order to make a successful, 
+secure, and authenticated HTTP request.
 
 The original `*.swagger.js` files from which the gRPC documentation was generated
 can be found here:
 
-{% for file in files %}- [`{{ file }}`]({{ repoUrl }}/blob/{{ commit }}/{{ rpcdir }}/{{file}})
+{% for file in files %}- [`{{ file }}`]({{ docsRepoUrl }}/blob/{{ docsCommit }}/protos/{{file}})
 {% endfor %}
 
 **NOTE**: The `byte` field type must be set as the base64 encoded string

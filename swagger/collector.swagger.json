@@ -1,0 +1,272 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "collector.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "DataCollector"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/download/{source}": {
+      "get": {
+        "summary": "DownloadHistoricalData opens up a TCP server on the FMTD and returns the server address. Once the TCP server accepts a request, it sends the requested file",
+        "operationId": "DataCollector_DownloadHistoricalData",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/fmtrpcHistoricalDataResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "source",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "TELEMETRY",
+              "RGA"
+            ]
+          }
+        ],
+        "tags": [
+          "DataCollector"
+        ]
+      }
+    },
+    "/v1/start/recording": {
+      "post": {
+        "summary": "fmtcli: `start-record`\nStartRecording will begin recording data from specified service and writing it.",
+        "operationId": "DataCollector_StartRecording",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/fmtrpcRecordResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/fmtrpcRecordRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DataCollector"
+        ]
+      }
+    },
+    "/v1/stop/recording": {
+      "post": {
+        "summary": "fmtcli: `stop-record`\nStopRecording will end the recording of data from specified service.",
+        "operationId": "DataCollector_StopRecording",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/fmtrpcStopRecResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/fmtrpcStopRecRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DataCollector"
+        ]
+      }
+    },
+    "/v1/subscribe/datastream": {
+      "get": {
+        "summary": "fmtcli: `subscribe-data-stream`\nSubscribeDataStream returns a uni-directional stream (server -\u003e client) of data being recorded from the Fluke DAQ.",
+        "operationId": "DataCollector_SubscribeDataStream",
+        "responses": {
+          "200": {
+            "description": "A successful response.(streaming responses)",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "$ref": "#/definitions/fmtrpcRealTimeData"
+                },
+                "error": {
+                  "$ref": "#/definitions/rpcStatus"
+                }
+              },
+              "title": "Stream result of fmtrpcRealTimeData"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "DataCollector"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "fmtrpcDataField": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "fmtrpcHistoricalDataResponse": {
+      "type": "object",
+      "properties": {
+        "server_port": {
+          "type": "string",
+          "format": "int64"
+        },
+        "buffer_size": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "fmtrpcRealTimeData": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "is_scanning": {
+          "type": "boolean"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "int64"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/fmtrpcDataField"
+          }
+        }
+      }
+    },
+    "fmtrpcRecordRequest": {
+      "type": "object",
+      "properties": {
+        "polling_interval": {
+          "type": "string",
+          "format": "int64"
+        },
+        "type": {
+          "$ref": "#/definitions/fmtrpcRecordService"
+        }
+      }
+    },
+    "fmtrpcRecordResponse": {
+      "type": "object",
+      "properties": {
+        "msg": {
+          "type": "string"
+        }
+      }
+    },
+    "fmtrpcRecordService": {
+      "type": "string",
+      "enum": [
+        "TELEMETRY",
+        "RGA"
+      ],
+      "default": "TELEMETRY"
+    },
+    "fmtrpcStopRecRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/fmtrpcRecordService"
+        }
+      }
+    },
+    "fmtrpcStopRecResponse": {
+      "type": "object",
+      "properties": {
+        "msg": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}
