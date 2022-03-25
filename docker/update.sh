@@ -18,11 +18,7 @@ function compile() {
   git pull
   git checkout $CHECKOUT_COMMIT
   COMMIT=$(git rev-parse HEAD)
-  eval $GOOS_CMD
-  eval $GOARCH_CMD
-  eval $GOPATH_CMD
   eval $INSTALL_CMD
-  # eval $MV_EXE_CMD
   # which fmtd
   # which fmtcli
   popd
@@ -47,7 +43,7 @@ function compile() {
 # Generic options.
 WS_ENABLED="${WS_ENABLED:-true}"
 FMTD_FORK="${FMTD_FORK:-SSSOC-CAN}"
-FMTD_COMMIT="${FMTD_COMMIT:-main}"
+FMTD_COMMIT="${FMTD_COMMIT:-build_tags}"
 PROTO_ROOT_DIR="build/protos"
 
 # Remove previously generated templates.
@@ -63,12 +59,8 @@ COMPONENT=fmtd
 COMMAND=fmtcli
 PROTO_SRC_DIR=fmtrpc
 EXCLUDE_PROTOS="none"
-GOOS_CMD="export GOOS=\"windows\""
-GOARCH_CMD="export GOARCH=\"386\""
-GOPATH_CMD="export GOPATH=~/go && export PATH=${PATH}:${GOPATH}/bin"
-MV_EXE_CMD="cp /usr/local/go/bin/windows_386/fmtd.exe ~/go/bin && cp /usr/local/go/bin/windows_386/fmtcli.exe ~/go/bin"
-INSTALL_CMD="make install"
+INSTALL_CMD="make install tags=\"demo\""
 APPEND_TO_FILE=source/fmtd.html.md
-GRPC_PORT=3567
+GRPC_PORT=7777
 REST_PORT=8080
 compile

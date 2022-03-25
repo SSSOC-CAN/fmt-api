@@ -32,3 +32,6 @@ src/
 # Python
 __pycache__/
 *.pyc
+
+# The proper DockerFile as it contains a GitHub Access Token
+DockerFile

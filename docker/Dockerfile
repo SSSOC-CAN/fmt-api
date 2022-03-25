@@ -28,11 +28,10 @@ COPY install_proto.sh /tmp/work/
 RUN /tmp/work/install_proto.sh
 
 # Compile both projects to have most dependencies and build steps cached.
-RUN git clone https://SSSOCPaulCote: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@github.com/SSSOC-CAN/fmtd /tmp/fmtd \
+RUN git clone https://SSSOCPaulCote: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@github.com/SSSOC-CAN/fmtd /tmp/fmtd \
   && cd /tmp/fmtd \
-  && export GOARCH="386" \
-  && export GOOS="windows" \
-  && make install
+  && git checkout build_tags \
+  && make install tags="demo"
 
 # Copy the rest of the files last so changes won't trigger a full rebuild of the image.
 COPY . /tmp/work
