@@ -1,7 +1,6 @@
 ```python
 >>> import codecs, grpc, os
 >>> # Generate the following 2 modules by compiling the {{ rpcdir }}/{{ method.fileName }} with the grpcio-tools.
->>> # See https://github.com/lightningnetwork/lnd/blob/master/docs/grpc/python.md for instructions.
 >>> import {{ method.stubFileName }}_pb2 as {{ method.packageName }}, {{ method.stubFileName }}_pb2_grpc as {{ method.stubFileName }}stub
 >>> channel = grpc.insecure_channel('{{ sssocip }}:{{ grpcport }}')
 >>> stub = {{ method.stubFileName }}stub.{{ method.service }}Stub(channel){% if method.streamingRequest %}
