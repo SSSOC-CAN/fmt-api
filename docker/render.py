@@ -10,7 +10,9 @@ import subprocess
 
 PROTO_DIR = os.environ.get('PROTO_DIR')
 REPO_URL = os.environ.get('REPO_URL')
+DOCS_REPO_URL = os.environ.get('DOCS_REPO_URL')
 COMMIT = os.environ.get('COMMIT')
+DOCS_COMMIT = os.environ.get('DOCS_COMMIT')
 COMMAND = os.getenv('COMMAND')
 COMPONENT = os.getenv('COMPONENT')
 WS_ENABLED = os.environ.get('WS_ENABLED')
@@ -104,6 +106,8 @@ def render_grpc():
         files=files,
         experimental=experimental,
         repoUrl=REPO_URL,
+        docsRepoUrl=DOCS_REPO_URL,
+        docsCommit=DOCS_COMMIT,
         commit=COMMIT,
         component=COMPONENT,
         rpcdir=PROTO_SRC_DIR,
@@ -155,6 +159,8 @@ def render_rest():
         endpoints=endpoints,
         files=files,
         repoUrl=REPO_URL,
+        docsRepoUrl=DOCS_REPO_URL,
+        docsCommit=DOCS_COMMIT,
         commit=COMMIT,
         component=COMPONENT,
         rpcdir=PROTO_SRC_DIR,

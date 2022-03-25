@@ -54,7 +54,9 @@ rm -rf source/*.html.md
 ## Compile docs for fmtd
 ########################
 REPO_URL="https://github.com/${FMTD_FORK}/fmtd"
+DOCS_REPO_URL="https://github.com/${FMTD_FORK}/fmt-api"
 CHECKOUT_COMMIT=$FMTD_COMMIT
+DOCS_COMMIT="master"
 COMPONENT=fmtd
 COMMAND=fmtcli
 PROTO_SRC_DIR=fmtrpc

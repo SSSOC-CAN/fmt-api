@@ -16,7 +16,7 @@ be used in order to make a successful, secure, and authenticated gRPC request.
 The original `*.proto` files from which the gRPC documentation was generated
 can be found here:
 
-{% for file in files %}- [`{{ file }}`]({{ repoUrl }}/blob/{{ commit }}/{{ rpcdir }}/{{file}})
+{% for file in files %}- [`{{ file }}`]({{ docsRepoUrl }}/blob/{{ commit }}/protos/{{file}})
 {% endfor %}
 
 
