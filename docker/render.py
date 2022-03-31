@@ -20,7 +20,7 @@ PROTO_SRC_DIR = os.environ.get('PROTO_SRC_DIR')
 APPEND_TO_FILE = os.environ.get('APPEND_TO_FILE')
 GRPC_PORT = os.environ.get('GRPC_PORT')
 REST_PORT = os.environ.get('REST_PORT')
-SSSOC_IP = "live.sssoc.ca"
+SSSOC_IP = "some.address"
 EXCLUDE_SERVICES = os.environ.get('EXCLUDE_SERVICES')
 
 def render_grpc():
