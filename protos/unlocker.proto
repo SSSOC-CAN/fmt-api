@@ -1,19 +1,25 @@
+/*
+Author: Paul Côté
+Last Change Author: Paul Côté
+Last Date Changed: 2022/09/20
+*/
+
 syntax = "proto3";
 
-package fmtrpc;
+package lanirpc;
 
-option go_package = "github.com/SSSOC-CAN/fmtd/fmtrpc";
+option go_package = "github.com/SSSOC-CAN/fmtd/lanirpc";
 
 service Unlocker{
-    /* fmtcli: `login`
+    /* lanicli: `login`
     Login will prompt the user to provide a password and send the response to the unlocker service for authentication.
     */
     rpc Login (LoginRequest) returns (LoginResponse);
-    /* fmtcli: `setpassword`
+    /* lanicli: `setpassword`
     SetPassword prompts the user to set a password on first startup if no password has already been set.
     */
     rpc SetPassword (SetPwdRequest) returns (SetPwdResponse);
-    /* fmtcli: `changepassword`
+    /* lanicli: `changepassword`
     ChangePassword prompts the user to enter the current password and enter a new password.
     */
     rpc ChangePassword (ChangePwdRequest) returns (ChangePwdResponse);

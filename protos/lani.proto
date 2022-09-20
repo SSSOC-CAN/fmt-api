@@ -1,4 +1,8 @@
 /*
+Author: Paul Côté
+Last Change Author: Paul Côté
+Last Date Changed: 2022/09/20
+
 Copyright (C) 2015-2018 Lightning Labs and The Lightning Network Developers
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,29 +25,67 @@ THE SOFTWARE.
 */
 syntax = "proto3";
 
-package fmtrpc;
+package lanirpc;
 
-option go_package = "github.com/SSSOC-CAN/fmtd/fmtrpc";
+import "plugin.proto";
 
-// Fmt is the main RPC server of the daemon.
-service Fmt {
-    /* fmtcli: `stop`
+option go_package = "github.com/SSSOC-CAN/fmtd/lanirpc";
+
+// Lani is the main RPC server of the daemon.
+service Lani {
+    /* lanicli: `stop`
     StopDaemon will send a shutdown request to the interrupt handler, triggering
     a graceful shutdown of the daemon.
     */
     rpc StopDaemon (StopRequest) returns (StopResponse);
-    /* fmtcli: `admin-test`
+    /* lanicli: `admin-test`
     AdminTest will send a string response if the proper macaroon is provided.
     */
     rpc AdminTest (AdminTestRequest) returns (AdminTestResponse);
-    /* fmtcli: `test`
+    /* lanicli: `test`
     TestCommand will send a string response regardless if a macaroon is provided or not.
     */
     rpc TestCommand (TestRequest) returns (TestResponse);
-    /* fmtcli: `bake-macaroon`
+    /* lanicli: `bake-macaroon`
     BakeMacaroon will bake a new macaroon based on input permissions and constraints.
     */
     rpc BakeMacaroon (BakeMacaroonRequest) returns (BakeMacaroonResponse);
+    /*
+    Deprecated! SetTemperature will now be a demo controller plugin which uses PluginAPI Command
+    */
+    rpc SetTemperature(proto.Empty) returns (proto.Empty);
+    /*
+    Deprecated! SetPressure will now be a demo controller plugin which uses PluginAPI Command
+    */
+    rpc SetPressure(proto.Empty) returns (proto.Empty);
+    /*
+    Deprecated! StartRecording is now /lanirpc.PluginAPI/StartRecord
+    */
+    rpc StartRecording(proto.Empty) returns (proto.Empty);
+    /*
+    Deprecated! StopRecording is now /lanirpc.PluginAPI/StopRecord
+    */
+    rpc StopRecording(proto.Empty) returns (proto.Empty);
+    /*
+    Deprecated! SubscribeDataStream is now /lanirpc.PluginAPI/Subscribe
+    */
+    rpc SubscribeDataStream(proto.Empty) returns (proto.Empty);
+    /*
+    Deprecated! LoadTestPlan will no longer be supported
+    */
+    rpc LoadTestPlan(proto.Empty) returns (proto.Empty);
+    /*
+    Deprecated! StartTestPlan will no longer be supported
+    */
+    rpc StartTestPlan(proto.Empty) returns (proto.Empty);
+    /*
+    Deprecated! StopTestPlan will no longer be supported
+    */
+    rpc StopTestPlan(proto.Empty) returns (proto.Empty);
+    /*
+    Deprecated! InsertROIMarker will no longer be supported
+    */
+    rpc InsertROIMarker(proto.Empty) returns (proto.Empty);
 }
 
 message StopRequest {
@@ -92,6 +134,9 @@ message BakeMacaroonRequest {
 
     // The list of permissions the new macaroon should grant
     repeated MacaroonPermission permissions = 3;
+
+    // The list of plugin names to be included in the macaroon
+    repeated string plugins = 4;
 }
 
 message BakeMacaroonResponse {

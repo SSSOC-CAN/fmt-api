@@ -1,5 +1,5 @@
 ---
-title: FMT API Reference
+title: Laniakea API Reference
 
 language_tabs:
   - shell

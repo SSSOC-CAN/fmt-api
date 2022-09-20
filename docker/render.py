@@ -21,7 +21,7 @@ APPEND_TO_FILE = os.environ.get('APPEND_TO_FILE')
 GRPC_PORT = os.environ.get('GRPC_PORT')
 REST_PORT = os.environ.get('REST_PORT')
 SSSOC_IP = "some.address"
-EXCLUDE_SERVICES = os.environ.get('EXCLUDE_SERVICES')
+EXCLUDE_SERVICES = json.loads(os.environ['EXCLUDE_SERVICES'])
 
 def render_grpc():
     """

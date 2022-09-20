@@ -18,13 +18,13 @@
   "paths": {
     "/v1/changepassword": {
       "post": {
-        "summary": "fmtcli: `changepassword`\nChangePassword prompts the user to enter the current password and enter a new password. If no password has been set, it prompts the user to set one",
+        "summary": "lanicli: `changepassword`\nChangePassword prompts the user to enter the current password and enter a new password.",
         "operationId": "Unlocker_ChangePassword",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/fmtrpcChangePwdResponse"
+              "$ref": "#/definitions/lanirpcChangePwdResponse"
             }
           },
           "default": {
@@ -40,7 +40,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/fmtrpcChangePwdRequest"
+              "$ref": "#/definitions/lanirpcChangePwdRequest"
             }
           }
         ],
@@ -51,13 +51,13 @@
     },
     "/v1/login": {
       "post": {
-        "summary": "fmtcli: `login`\nLogin will prompt the user to provide a password and send the response to the unlocker service for authentication.",
+        "summary": "lanicli: `login`\nLogin will prompt the user to provide a password and send the response to the unlocker service for authentication.",
         "operationId": "Unlocker_Login",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/fmtrpcLoginResponse"
+              "$ref": "#/definitions/lanirpcLoginResponse"
             }
           },
           "default": {
@@ -73,7 +73,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/fmtrpcLoginRequest"
+              "$ref": "#/definitions/lanirpcLoginRequest"
             }
           }
         ],
@@ -84,13 +84,13 @@
     },
     "/v1/setpassword": {
       "post": {
-        "summary": "fmtcli: `setpassword`\nSetPassword prompts the user to set a password on first startup if no password has already been set.",
+        "summary": "lanicli: `setpassword`\nSetPassword prompts the user to set a password on first startup if no password has already been set.",
         "operationId": "Unlocker_SetPassword",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/fmtrpcSetPwdResponse"
+              "$ref": "#/definitions/lanirpcSetPwdResponse"
             }
           },
           "default": {
@@ -106,7 +106,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/fmtrpcSetPwdRequest"
+              "$ref": "#/definitions/lanirpcSetPwdRequest"
             }
           }
         ],
@@ -117,47 +117,52 @@
     }
   },
   "definitions": {
-    "fmtrpcChangePwdRequest": {
+    "lanirpcChangePwdRequest": {
       "type": "object",
       "properties": {
         "current_password": {
           "type": "string",
-          "format": "byte"
+          "format": "byte",
+          "description": "current_password should be the current valid password used to unlock the\ndaemon. When using REST, this field must be encoded as base64."
         },
         "new_password": {
           "type": "string",
-          "format": "byte"
+          "format": "byte",
+          "description": "new_password should be the desired, new password used to unlock the\ndaemon. When using REST, this field must be encoded as base64."
         },
         "new_macaroon_root_key": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "new_macaroon_root_key is an optional argument instructing the daemon to\nrotate the macaroon root key when set to true. This will invalidate all\npreviously generated macaroons."
         }
       }
     },
-    "fmtrpcChangePwdResponse": {
+    "lanirpcChangePwdResponse": {
       "type": "object"
     },
-    "fmtrpcLoginRequest": {
+    "lanirpcLoginRequest": {
       "type": "object",
       "properties": {
         "password": {
           "type": "string",
-          "format": "byte"
+          "format": "byte",
+          "description": "The password should be the current valid password for the daemon. This\nwill be required to decrypt on-disk material that the daemon requires to\nfunction properly. When using REST, this field must be encoded as base64."
         }
       }
     },
-    "fmtrpcLoginResponse": {
+    "lanirpcLoginResponse": {
       "type": "object"
     },
-    "fmtrpcSetPwdRequest": {
+    "lanirpcSetPwdRequest": {
       "type": "object",
       "properties": {
         "password": {
           "type": "string",
-          "format": "byte"
+          "format": "byte",
+          "description": "The password is the password that should be used to encrypt on-disk material \nthat the daemon requires to function properly. After creation, this\npassword is required to unlock the daemon. When using REST, this field\nmust be encoded as base64."
         }
       }
     },
-    "fmtrpcSetPwdResponse": {
+    "lanirpcSetPwdResponse": {
       "type": "object"
     },
     "protobufAny": {

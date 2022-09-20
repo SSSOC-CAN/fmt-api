@@ -9,7 +9,7 @@ const loaderOptions = {
   defaults: true,
   oneofs: true
 };
-{% if method.fileName == 'fmt.proto' %}const packageDefinition = protoLoader.loadSync('{{ method.fileName }}', loaderOptions);{% endif %}{% if method.fileName != 'fmt.proto' %}const packageDefinition = protoLoader.loadSync(['fmt.proto', '{{ method.fileName }}'], loaderOptions);{% endif %}
+{% if method.fileName == 'lani.proto' %}const packageDefinition = protoLoader.loadSync('{{ method.fileName }}', loaderOptions);{% endif %}{% if method.fileName != 'lani.proto' %}const packageDefinition = protoLoader.loadSync(['lani.proto', '{{ method.fileName }}'], loaderOptions);{% endif %}
 const {{ method.packageName }} = grpc.loadPackageDefinition(packageDefinition).{{ method.packageName }};
 const macaroon = fs.readFileSync("/path/to/admin.macaroon").toString('hex');
 process.env.GRPC_SSL_CIPHER_SUITES = 'HIGH+ECDSA';

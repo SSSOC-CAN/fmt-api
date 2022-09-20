@@ -54,14 +54,15 @@ rm -rf source/*.html.md
 ## Compile docs for fmtd
 ########################
 REPO_URL="https://github.com/${FMTD_FORK}/fmtd"
-DOCS_REPO_URL="https://github.com/${FMTD_FORK}/fmt-api"
-CHECKOUT_COMMIT=$FMTD_COMMIT
+DOCS_REPO_URL="https://github.com/${FMTD_FORK}/laniakea-api"
+CHECKOUT_COMMIT="main"
 DOCS_COMMIT="master"
 COMPONENT=fmtd
-COMMAND=fmtcli
-PROTO_SRC_DIR=fmtrpc
+COMMAND=lanicli
+PROTO_SRC_DIR=lanirpc
 EXCLUDE_PROTOS="none"
-INSTALL_CMD="make install tags=\"demo\""
+EXCLUDE_SERVICES='["Controller", "Datasource"]'
+INSTALL_CMD="make install"
 APPEND_TO_FILE=source/fmtd.html.md
 GRPC_PORT=7777
 REST_PORT=8080

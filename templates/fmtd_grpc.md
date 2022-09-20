@@ -1,19 +1,19 @@
-# FMT gRPC API Reference
+# Laniakea gRPC API Reference
 
-Welcome to the gRPC API reference documentation for FMT, the Facility Management Tool.
+Welcome to the gRPC API reference documentation for Laniakea.
 
-This site features the API documentation for fmtcli (CLI), Python,
-and Javascript in order to communicate with a `fmtd` instance through gRPC.
+This site features the API documentation for lanicli (CLI), Python,
+and Javascript in order to communicate with a `laniakea` instance through gRPC.
 
-The examples to the right assume that the there is a remote `fmtd` instance
+The examples to the right assume that the there is a remote `laniakea` instance
 running and listening for gRPC connections on port {{ grpcport }}.
 
-Two things are needed in order to make a gRPC request to an `fmtd` instance: 
+Two things are needed in order to make a gRPC request to an `laniakea` instance: 
 a TLS/SSL connection and a macaroon used for RPC authentication. The examples 
 to the right will show how these can be used in order to make a successful, 
 secure, and authenticated gRPC request.
 
-To request an `fmtd` instance for testing and development, please visit our customer
+To request an `laniakea` instance for testing and development, please visit our customer
 experience website at [https://live.sssoc.ca](https://live.sssoc.ca). If you do not
 have an account with us, please contact us at [info@sssoc.ca](info@sssoc.ca) and we'll
 get you started.
@@ -26,10 +26,10 @@ can be found here:
 
 
 This is the reference for the **gRPC API**. Alternatively, there is also a [REST
-API which is documented here](#fmt-rest-api-reference).
+API which is documented here](#laniakea-rest-api-reference).
 
 <small>This documentation was
-[generated automatically](https://github.com/SSSOC-CAN/fmt-api) against commit
+[generated automatically](https://github.com/SSSOC-CAN/laniakea-api) against commit
 [`{{ commit }}`]({{ repoUrl }}/tree/{{ commit }}).</small>
 
 # Tutorial
@@ -37,23 +37,19 @@ API which is documented here](#fmt-rest-api-reference).
 ## Python
 
 This section enumerates what you need to do to write a client that communicates
-with `fmtd` in Python.
+with `laniakea` in Python.
 
 ```shell
-$ virtualenv fmtd
-$ source fmtd/bin/activate
-(fmtd) $ pip install grpcio grpcio-tools googleapis-common-protos
-(fmtd) $ git clone https://github.com/googleapis/googleapis.git
-(fmtd) $ curl -o fmt.proto -s https://raw.githubusercontent.com/SSSOC-CAN/fmt-api/master/protos/fmt.proto
-(fmtd) $ curl -o collector.proto -s https://raw.githubusercontent.com/SSSOC-CAN/fmt-api/master/protos/collector.proto
-(fmtd) $ python -m grpc_tools.protoc --proto_path=googleapis:. --python_out=. --grpc_python_out=. fmt.proto
-(fmtd) $ python -m grpc_tools.protoc --proto_path=googleapis:. --python_out=. --grpc_python_out=. collector.proto
+$ virtualenv lani
+$ source lani/bin/activate
+(lani) $ pip install grpcio grpcio-tools googleapis-common-protos
+(lani) $ git clone https://github.com/googleapis/googleapis.git
+(lani) $ curl -o fmt.proto -s https://raw.githubusercontent.com/SSSOC-CAN/fmt-api/master/protos/lani.proto
+(lani) $ python -m grpc_tools.protoc --proto_path=googleapis:. --python_out=. --grpc_python_out=. lani.proto
 ```
 ```python
-import collector_pb2 as collect
-import collector_pb2_grpc as collectrpc
-import fmt_pb2 as fmt
-import fmt_pb2_grpc as fmtrpc
+import lani_pb2 as lani
+import lani_pb2_grpc as lanirpc
 import grpc
 import os
 import codecs
@@ -69,29 +65,21 @@ os.environ["GRPC_SSL_CIPHER_SUITES"] = 'HIGH+ECDSA'
 cert = open(os.path.expanduser('/path/to/tls.cert'), 'rb').read()
 creds = grpc.ssl_channel_credentials(cert)
 channel = grpc.secure_channel('some.address:7777', creds)
-fmt_stub = fmtrpc.FmtStub(channel)
-collector_stub = collectrpc.DataCollectorStub(channel)
+stub = lanirpc.LaniStub(channel)
 
 with open(os.path.expanduser('/path/to/admin.macaroon'), 'rb') as f:
     macaroon_bytes = f.read()
     macaroon = codecs.encode(macaroon_bytes, 'hex')
 
 # Invoke the admin-test command
-response = fmt_stub.AdminTest(fmt.AdminTestRequest(), metadata=[('macaroon', macaroon)])
+response = stub.AdminTest(lani.AdminTestRequest(), metadata=[('macaroon', macaroon)])
 print(response.msg)
-
-# Invoke the StartRecord and SubscribeDataStream commands
-req = collect.RecordRequest(collect.RecordService.TELEMETRY)
-print(collector_stub.StartRecord(req, metadata=[('macaroon', macaroon)]))
-request = collect.SubscribeDataRequest()
-for rtd in collector_stub.SubscribeDataStream(request, metadata=[('macaroon', macaroon)]):
-    print(rtd)
 ```
 
 ### Setup and Installation
 
-Fmtd uses the gRPC protocol for communication with clients like fmtcli. gRPC is
-based on protocol buffers and as such, you will need to compile the fmtd proto
+Laniakea uses the gRPC protocol for communication with clients like lanicli. gRPC is
+based on protocol buffers and as such, you will need to compile the Laniakea proto
 file in Python before you can use it to communicate with fmtd.
 
 1. Create a virtual environment for your project
@@ -100,23 +88,22 @@ file in Python before you can use it to communicate with fmtd.
   google/api/annotations.proto)
 4. Clone the google api's repository (required due to the use of
   google/api/annotations.proto)
-5. Copy the fmtd fmt.proto and collector.proto files (you'll find them in the `protos` dir at
-  [https://github.com/SSSOC-CAN/fmt-api/blob/master/protos/fmt.proto](https://github.com/SSSOC-CAN/fmt-api/blob/master/protos/fmt.proto)) or just download it
-6. Compile the proto files
+5. Copy the fmtd lani.proto file (you'll find them in the `protos` dir at
+  [https://github.com/SSSOC-CAN/fmt-api/blob/master/protos/lani.proto](https://github.com/SSSOC-CAN/fmt-api/blob/master/protos/lani.proto)) or just download it
+6. Compile the proto file
 
-After following these steps, four files `fmt_pb2.py`, `fmt_pb2_grpc.py`,
-`collector_pb2.py` and `collector_pb2_grpc.py` will be generated. 
+After following these steps, two files `lani_pb2.py` and `lani_pb2_grpc.py` will be generated. 
 These files will be imported in your project anytime you use Python gRPC.
 
 ## Javascript
 
 This section enumerates what you need to do to write a client that communicates
-with `fmtd` in Javascript.
+with `laniakea` in Javascript.
 
 ```shell
 $ npm init # (or npm init -f if you want to use the default values without prompt)
 $ npm install @grpc/grpc-js @grpc/proto-loader --save
-$ curl -o fmt.proto -s https://raw.githubusercontent.com/SSSOC-CAN/fmt-api/master/protos/fmt.proto
+$ curl -o lani.proto -s https://raw.githubusercontent.com/SSSOC-CAN/laniakea-api/master/protos/lani.proto
 ```
 ```js
 const fs = require('fs');
@@ -129,12 +116,12 @@ const loaderOptions = {
   defaults: true,
   oneofs: true
 };
-const packageDefinition = protoLoader.loadSync('fmt.proto', loaderOptions);
+const packageDefinition = protoLoader.loadSync('lani.proto', loaderOptions);
 
 process.env.GRPC_SSL_CIPHER_SUITES = 'HIGH+ECDSA'
 
 // tls.cert and admin.macaroon are provided to you after successfully 
-// spinning up an `fmtd` instance via our customer experience website
+// spinning up a `laniakea` instance via our customer experience website
 // For more, visit https://live.sssoc.ca or email us at info@sssoc.ca
 let m = fs.readFileSync('/path/to/admin.macaroon');
 let macaroon = m.toString('hex');
@@ -147,17 +134,17 @@ let macaroonCreds = grpc.credentials.createFromMetadataGenerator((_args, callbac
 });
 
 // build ssl credentials using the tls cert
-let fmtdCert = fs.readFileSync("/path/to/tls.cert");
-let sslCreds = grpc.credentials.createSsl(fmtdCert);
+let laniCert = fs.readFileSync("/path/to/tls.cert");
+let sslCreds = grpc.credentials.createSsl(laniCert);
 
 // combine the cert credentials and the macaroon auth credentials
 // such that every call is properly encrypted and authenticated
 let credentials = grpc.credentials.combineChannelCredentials(sslCreds, macaroonCreds);
 
 // Pass the crendentials when creating a channel
-let fmtrpcDescriptor = grpc.loadPackageDefinition(packageDefinition);
-let fmtrpc = fmtrpcDescriptor.fmtrpc;
-let client = new fmtrpc.Fmt('some.address:7777', credentials);
+let lanirpcDescriptor = grpc.loadPackageDefinition(packageDefinition);
+let lanirpc = lanirpcDescriptor.lanirpc;
+let client = new lanirpc.Lani('some.address:7777', credentials);
 
 client.testCommand({}, (err, response) => {
   if (err) {
@@ -171,9 +158,9 @@ client.testCommand({}, (err, response) => {
 
 First, you'll need to initialize a simple nodejs project. Then you need to install 
 the Javascript grpc and proto loader library dependencies. You also need to copy the 
-`fmtd` `fmt.proto` file in your project directory (or at least somewhere reachable 
-by your Javascript code). The `fmt.proto` file is [located in the `protos` directory 
-of the `fmt-api` repo](https://github.com/SSSOC-CAN/fmt-api/blob/master/protos/fmt.proto).
+`laniakea` `lani.proto` file in your project directory (or at least somewhere reachable 
+by your Javascript code). The `lani.proto` file is [located in the `protos` directory 
+of the `laniakea-api` repo](https://github.com/SSSOC-CAN/laniakea-api/blob/master/protos/lani.proto).
 
 {% for service in services %}
 # Service _{{ service.name }}_
